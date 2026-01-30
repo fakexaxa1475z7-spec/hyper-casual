@@ -6,39 +6,32 @@ public class CTBackground2 : MonoBehaviour
 {
     public float speed = 1.5f;
     public float needScore = 20f;
-    public float score = Score.instance.GetScore();
     public float fadeDuration = 2f;
     Image img;
+
+    public float startSpeed = 1.5f;
+    public float maxSpeed = 8f;
 
     void Start()
     {
         img = GetComponent<Image>();
     }
 
-    IEnumerator FadeOut()
+    void FixedUpdate()
     {
-        float t = 0f;
-        Color c = img.color;
+        float currentSpeed = startSpeed + (GameManager.instance.score * 0.02f);
+        currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
 
-        while (t < fadeDuration)
+        transform.Translate(Vector2.down * currentSpeed * Time.fixedDeltaTime);
+
+        if (transform.position.y < -10.8f)
         {
-            t += Time.deltaTime;
-            c.a = Mathf.Lerp(1f, 0f, t / fadeDuration);
-            img.color = c;
-            yield return null;
+            transform.position = new Vector2(0, 12.6f);
         }
 
-        c.a = 0f;
-        img.color = c;
-    }
-
-    void Update()
-    {
-        transform.Translate(Vector2.down * speed * Time.deltaTime);
-
-        if (score > needScore)
+        if (GameManager.instance.score > needScore)
         {
-            StartCoroutine(FadeOut());
+            Destroy(gameObject);
         }
     }
 }

@@ -1,19 +1,14 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    public TextMeshProUGUI scoreText;
-    public static Score instance;
-    private int score = 0;
+    public TMP_Text scoreText;
+    public TMP_Text highScoreText;
 
-    public void AddScore()
+    void Update()
     {
-        score++;
-        scoreText.text = score.ToString();
-    }
-    public int GetScore()
-    {
-        return score;
+        scoreText.text = GameManager.instance.score.ToString(); ;
+        highScoreText.text = GameManager.instance.highScore.ToString(); ;
     }
 }

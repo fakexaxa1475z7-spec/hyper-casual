@@ -2,13 +2,25 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    public float speed = 1.5f;
+    public float startSpeed = 1.5f;
+    public float maxSpeed = 8f;
 
-    void Update()
+    Rigidbody2D rb;
+
+    void Awake()
     {
-        transform.Translate(Vector2.down * speed * Time.deltaTime);
+        rb = GetComponent<Rigidbody2D>();
+    }
 
-        if (transform.position.y < -5.5f)
+    void FixedUpdate()
+    {
+        // ความเร็วเพิ่มตาม score
+        float currentSpeed = startSpeed + (GameManager.instance.score * 0.02f);
+        currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
+
+        rb.MovePosition(rb.position + Vector2.down * currentSpeed * Time.fixedDeltaTime);
+
+        if (transform.position.y < Camera.main.transform.position.y - 8f)
         {
             Destroy(gameObject);
         }

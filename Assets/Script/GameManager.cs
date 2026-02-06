@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     float timer;
     bool isGameOver;
 
+    public bool isNewHighScore;
+
     void Awake()
     {
         if (instance == null)
@@ -17,7 +19,6 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        // âËÅ´ High Score
         highScore = PlayerPrefs.GetInt("HighScore", 0);
     }
 
@@ -35,16 +36,23 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+         if (isGameOver) return;
         isGameOver = true;
-        UIManager.instance.ShowGameOver();
 
         if (score > highScore)
         {
+            isNewHighScore = true;
             highScore = score;
+
             PlayerPrefs.SetInt("HighScore", highScore);
             PlayerPrefs.Save();
         }
+        else
+        {
+            isNewHighScore = false;
+        }
 
+        UIManager.instance.ShowGameOver();
         Time.timeScale = 0f;
     }
 }

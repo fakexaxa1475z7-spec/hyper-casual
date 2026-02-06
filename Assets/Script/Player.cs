@@ -6,18 +6,25 @@ public class Player : MonoBehaviour
     public float bounceForce = 5f;
 
     Rigidbody2D rb;
+    SpriteRenderer sr;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
         float move = Input.GetAxisRaw("Horizontal");
+
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
 
-        // ตกนอกจอ = Game Over
+        if (move > 0)
+            sr.flipX = true;
+        else if (move < 0)
+            sr.flipX = false;
+
         if (transform.position.y < Camera.main.transform.position.y - 7f)
         {
             GameManager.instance.GameOver();
@@ -28,7 +35,6 @@ public class Player : MonoBehaviour
     {
         if (!other.CompareTag("Platform")) return;
 
-        // เด้งเฉพาะตอนตก
         if (rb.velocity.y > 0f) return;
 
         Bounce();
